@@ -29,26 +29,16 @@ export default function NotificationCenter({
     }
   };
 
-  const getNotificationBg = (type: string) => {
-    switch (type) {
-      case 'info': return 'bg-blue-50 border-blue-200';
-      case 'warning': return 'bg-yellow-50 border-yellow-200';
-      case 'error': return 'bg-red-50 border-red-200';
-      case 'success': return 'bg-green-50 border-green-200';
-      default: return 'bg-gray-50 border-gray-200';
-    }
-  };
-
   const formatTime = (timestamp: string) => {
     const date = new Date(timestamp);
     const now = new Date();
     const diffMs = now.getTime() - date.getTime();
     const diffMins = Math.floor(diffMs / 60000);
     
-    if (diffMins < 1) return 'Just now';
-    if (diffMins < 60) return `${diffMins}m ago`;
-    if (diffMins < 1440) return `${Math.floor(diffMins / 60)}h ago`;
-    return `${Math.floor(diffMins / 1440)}d ago`;
+    if (diffMins < 1) return 'همین الان';
+    if (diffMins < 60) return `${diffMins} دقیقه پیش`;
+    if (diffMins < 1440) return `${Math.floor(diffMins / 60)} ساعت پیش`;
+    return `${Math.floor(diffMins / 1440)} روز پیش`;
   };
 
   const filteredNotifications = notifications.filter(notification => {
@@ -62,15 +52,15 @@ export default function NotificationCenter({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-end z-50">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-start z-50">
       <div className="bg-white w-full max-w-md h-full shadow-2xl flex flex-col">
         {/* Header */}
-        <div className="p-6 border-b border-gray-200">
+        <div className="p-4 lg:p-6 border-b border-gray-200">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-xl font-semibold text-gray-900">Notifications</h2>
+              <h2 className="text-lg lg:text-xl font-semibold text-gray-900">اعلانات</h2>
               <p className="text-sm text-gray-600 mt-1">
-                {unreadCount} unread of {notifications.length} total
+                {unreadCount} خوانده نشده از {notifications.length} کل
               </p>
             </div>
             <button
@@ -82,12 +72,12 @@ export default function NotificationCenter({
           </div>
 
           {/* Filter Tabs */}
-          <div className="mt-4 flex space-x-1 bg-gray-100 rounded-lg p-1">
+          <div className="mt-4 flex space-x-1 space-x-reverse bg-gray-100 rounded-lg p-1">
             {[
-              { key: 'all', label: 'All' },
-              { key: 'unread', label: 'Unread' },
-              { key: 'error', label: 'Errors' },
-              { key: 'warning', label: 'Warnings' },
+              { key: 'all', label: 'همه' },
+              { key: 'unread', label: 'خوانده نشده' },
+              { key: 'error', label: 'خطاها' },
+              { key: 'warning', label: 'هشدارها' },
             ].map((tab) => (
               <button
                 key={tab.key}
@@ -108,10 +98,10 @@ export default function NotificationCenter({
             <div className="mt-4">
               <button
                 onClick={onMarkAllAsRead}
-                className="text-blue-600 hover:text-blue-800 text-sm font-medium flex items-center space-x-1"
+                className="text-blue-600 hover:text-blue-800 text-sm font-medium flex items-center space-x-1 space-x-reverse"
               >
                 <CheckCheck className="h-4 w-4" />
-                <span>Mark all as read</span>
+                <span>همه را خوانده شده علامت بزن</span>
               </button>
             </div>
           )}
@@ -124,8 +114,8 @@ export default function NotificationCenter({
               <div className="bg-gray-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
                 <CheckCircle className="h-8 w-8 text-gray-400" />
               </div>
-              <h3 className="text-lg font-medium text-gray-900 mb-2">All caught up!</h3>
-              <p className="text-gray-600">No notifications to show.</p>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">همه چیز مرتبه!</h3>
+              <p className="text-gray-600">اعلانی برای نمایش وجود ندارد.</p>
             </div>
           ) : (
             <div className="divide-y divide-gray-200">
@@ -136,7 +126,7 @@ export default function NotificationCenter({
                     !notification.isRead ? 'bg-blue-50' : ''
                   }`}
                 >
-                  <div className="flex items-start space-x-3">
+                  <div className="flex items-start space-x-3 space-x-reverse">
                     <div className="flex-shrink-0 mt-1">
                       {getNotificationIcon(notification.type)}
                     </div>
@@ -155,16 +145,16 @@ export default function NotificationCenter({
                         {notification.message}
                       </p>
                       <div className="flex items-center justify-between mt-3">
-                        <div className="flex items-center text-xs text-gray-500">
-                          <Clock className="h-3 w-3 mr-1" />
-                          {formatTime(notification.timestamp)}
+                        <div className="flex items-center text-xs text-gray-500 space-x-1 space-x-reverse">
+                          <Clock className="h-3 w-3" />
+                          <span>{formatTime(notification.timestamp)}</span>
                         </div>
                         {!notification.isRead && (
                           <button
                             onClick={() => onMarkAsRead(notification.id)}
                             className="text-blue-600 hover:text-blue-800 text-xs font-medium"
                           >
-                            Mark as read
+                            خوانده شده
                           </button>
                         )}
                       </div>

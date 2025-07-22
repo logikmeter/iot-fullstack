@@ -17,69 +17,69 @@ function App() {
   const [currentPage, setCurrentPage] = useState('dashboard');
   const [showNotifications, setShowNotifications] = useState(false);
   const [showChatBot, setShowChatBot] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  // Mock notifications data
   const [notifications, setNotifications] = useState<Notification[]>([
     {
       id: '1',
-      title: 'Device Offline',
-      message: 'LED Light Controller in Building B - Floor 2 has gone offline',
+      title: 'دستگاه آفلاین',
+      message: 'کنترلر چراغ LED در ساختمان ب - طبقه دوم آفلاین شده است',
       type: 'error',
       timestamp: '2024-01-15T10:15:00Z',
       isRead: false
     },
     {
       id: '2',
-      title: 'Low Battery Warning',
-      message: 'Security Camera Main Entrance battery level is at 15%',
+      title: 'هشدار باتری کم',
+      message: 'سطح باتری دوربین امنیتی ورودی اصلی به ۱۵٪ رسیده است',
       type: 'warning',
       timestamp: '2024-01-15T09:30:00Z',
       isRead: false
     },
     {
       id: '3',
-      title: 'System Update Complete',
-      message: 'IoT Control Hub has been successfully updated to version 2.1.0',
+      title: 'به‌روزرسانی سیستم کامل شد',
+      message: 'مرکز کنترل IoT با موفقیت به نسخه ۲.۱.۰ به‌روزرسانی شد',
       type: 'success',
       timestamp: '2024-01-15T08:45:00Z',
       isRead: true
     },
     {
       id: '4',
-      title: 'New Device Connected',
-      message: 'Smart Lock Conference Room has been successfully added to your network',
+      title: 'دستگاه جدید متصل شد',
+      message: 'قفل هوشمند اتاق جلسات با موفقیت به شبکه شما اضافه شد',
       type: 'info',
       timestamp: '2024-01-14T16:20:00Z',
       isRead: false
     },
     {
       id: '5',
-      title: 'High Temperature Alert',
-      message: 'Environmental Sensor Lab is reporting temperature above normal range (26.5°C)',
+      title: 'هشدار دمای بالا',
+      message: 'سنسور محیطی آزمایشگاه دمای بالاتر از حد طبیعی (۲۶.۵°C) را گزارش می‌دهد',
       type: 'warning',
       timestamp: '2024-01-14T14:30:00Z',
       isRead: true
     },
     {
       id: '6',
-      title: 'Energy Consumption Report',
-      message: 'Your monthly energy consumption report is now available for download',
+      title: 'گزارش مصرف انرژی',
+      message: 'گزارش مصرف انرژی ماهانه شما آماده دانلود است',
       type: 'info',
       timestamp: '2024-01-14T12:00:00Z',
       isRead: false
     },
     {
       id: '7',
-      title: 'Security Alert',
-      message: 'Multiple failed login attempts detected from IP 192.168.1.100',
+      title: 'هشدار امنیتی',
+      message: 'تلاش‌های متعدد ورود ناموفق از IP ۱۹۲.۱۶۸.۱.۱۰۰ شناسایی شد',
       type: 'error',
       timestamp: '2024-01-14T10:45:00Z',
       isRead: false
     },
     {
       id: '8',
-      title: 'Maintenance Scheduled',
-      message: 'System maintenance is scheduled for tonight from 2:00 AM to 4:00 AM',
+      title: 'نگهداری برنامه‌ریزی شده',
+      message: 'نگهداری سیستم برای امشب از ساعت ۲:۰۰ تا ۴:۰۰ صبح برنامه‌ریزی شده است',
       type: 'info',
       timestamp: '2024-01-13T18:00:00Z',
       isRead: true
@@ -90,7 +90,7 @@ function App() {
     const mockUsers = {
       'super-admin': {
         id: '1',
-        name: 'John Smith',
+        name: 'احمد محمدی',
         email: 'superadmin@demo.com',
         role: 'super-admin' as const,
         isActive: true,
@@ -98,7 +98,7 @@ function App() {
       },
       'admin': {
         id: '2',
-        name: 'Sarah Johnson',
+        name: 'فاطمه احمدی',
         email: 'admin@demo.com',
         role: 'admin' as const,
         isActive: true,
@@ -106,7 +106,7 @@ function App() {
       },
       'customer': {
         id: '3',
-        name: 'Mike Wilson',
+        name: 'علی رضایی',
         email: 'customer@demo.com',
         role: 'customer' as const,
         isActive: true,
@@ -162,14 +162,18 @@ function App() {
       <Sidebar 
         user={currentUser} 
         currentPage={currentPage} 
-        onPageChange={setCurrentPage} 
+        onPageChange={setCurrentPage}
+        isMobileOpen={isMobileMenuOpen}
+        onMobileClose={() => setIsMobileMenuOpen(false)}
       />
       
       <div className="flex-1 flex flex-col overflow-hidden">
         <Header 
           user={currentUser} 
           notifications={notifications}
-          onNotificationClick={() => setShowNotifications(true)} 
+          onNotificationClick={() => setShowNotifications(true)}
+          onMobileMenuToggle={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          isMobileMenuOpen={isMobileMenuOpen}
         />
         
         <main className="flex-1 overflow-y-auto">

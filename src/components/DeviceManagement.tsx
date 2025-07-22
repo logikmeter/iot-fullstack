@@ -27,14 +27,13 @@ export default function DeviceManagement({ user }: DeviceManagementProps) {
   const [filterStatus, setFilterStatus] = useState('all');
   const [showAddModal, setShowAddModal] = useState(false);
 
-  // Mock devices data
   const devices: Device[] = [
     {
       id: '1',
-      name: 'Smart Thermostat Living Room',
-      type: 'Climate Control',
+      name: 'ترموستات هوشمند اتاق نشیمن',
+      type: 'کنترل آب و هوا',
       status: 'online',
-      location: 'Building A - Floor 1',
+      location: 'ساختمان الف - طبقه اول',
       temperature: 22.5,
       humidity: 45,
       power: 85,
@@ -43,30 +42,30 @@ export default function DeviceManagement({ user }: DeviceManagementProps) {
     },
     {
       id: '2',
-      name: 'Security Camera Main Entrance',
-      type: 'Security',
+      name: 'دوربین امنیتی ورودی اصلی',
+      type: 'امنیت',
       status: 'warning',
-      location: 'Building A - Entrance',
+      location: 'ساختمان الف - ورودی',
       power: 120,
       lastUpdate: '2024-01-15T10:29:00Z',
       batteryLevel: 78
     },
     {
       id: '3',
-      name: 'LED Light Controller Office',
-      type: 'Lighting',
+      name: 'کنترلر چراغ LED دفتر',
+      type: 'روشنایی',
       status: 'offline',
-      location: 'Building B - Floor 2',
+      location: 'ساختمان ب - طبقه دوم',
       power: 0,
       lastUpdate: '2024-01-15T10:15:00Z',
       batteryLevel: 0
     },
     {
       id: '4',
-      name: 'Environmental Sensor Lab',
-      type: 'Monitoring',
+      name: 'سنسور محیطی آزمایشگاه',
+      type: 'نظارت',
       status: 'online',
-      location: 'Building A - Floor 2',
+      location: 'ساختمان الف - طبقه دوم',
       temperature: 21.8,
       humidity: 52,
       power: 45,
@@ -75,20 +74,20 @@ export default function DeviceManagement({ user }: DeviceManagementProps) {
     },
     {
       id: '5',
-      name: 'Smart Lock Conference Room',
-      type: 'Security',
+      name: 'قفل هوشمند اتاق جلسات',
+      type: 'امنیت',
       status: 'online',
-      location: 'Building B - Floor 1',
+      location: 'ساختمان ب - طبقه اول',
       power: 25,
       lastUpdate: '2024-01-15T10:28:00Z',
       batteryLevel: 95
     },
     {
       id: '6',
-      name: 'Air Quality Monitor',
-      type: 'Monitoring',
+      name: 'مانیتور کیفیت هوا',
+      type: 'نظارت',
       status: 'error',
-      location: 'Building A - Floor 3',
+      location: 'ساختمان الف - طبقه سوم',
       temperature: 24.2,
       humidity: 38,
       power: 0,
@@ -107,12 +106,22 @@ export default function DeviceManagement({ user }: DeviceManagementProps) {
     }
   };
 
+  const getStatusText = (status: string) => {
+    switch (status) {
+      case 'online': return 'آنلاین';
+      case 'warning': return 'هشدار';
+      case 'offline': return 'آفلاین';
+      case 'error': return 'خطا';
+      default: return 'نامشخص';
+    }
+  };
+
   const getTypeIcon = (type: string) => {
     switch (type.toLowerCase()) {
-      case 'climate control': return <Thermometer className="h-4 w-4" />;
-      case 'security': return <Wifi className="h-4 w-4" />;
-      case 'lighting': return <Power className="h-4 w-4" />;
-      case 'monitoring': return <Activity className="h-4 w-4" />;
+      case 'کنترل آب و هوا': return <Thermometer className="h-4 w-4" />;
+      case 'امنیت': return <Wifi className="h-4 w-4" />;
+      case 'روشنایی': return <Power className="h-4 w-4" />;
+      case 'نظارت': return <Activity className="h-4 w-4" />;
       default: return <Cpu className="h-4 w-4" />;
     }
   };
@@ -123,10 +132,10 @@ export default function DeviceManagement({ user }: DeviceManagementProps) {
     const diffMs = now.getTime() - date.getTime();
     const diffMins = Math.floor(diffMs / 60000);
     
-    if (diffMins < 1) return 'Just now';
-    if (diffMins < 60) return `${diffMins}m ago`;
-    if (diffMins < 1440) return `${Math.floor(diffMins / 60)}h ago`;
-    return `${Math.floor(diffMins / 1440)}d ago`;
+    if (diffMins < 1) return 'همین الان';
+    if (diffMins < 60) return `${diffMins} دقیقه پیش`;
+    if (diffMins < 1440) return `${Math.floor(diffMins / 60)} ساعت پیش`;
+    return `${Math.floor(diffMins / 1440)} روز پیش`;
   };
 
   const filteredDevices = devices.filter(device => {
@@ -138,45 +147,45 @@ export default function DeviceManagement({ user }: DeviceManagementProps) {
   });
 
   return (
-    <div className="p-6">
-      <div className="flex justify-between items-center mb-8">
+    <div className="p-4 lg:p-6">
+      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-6 lg:mb-8 gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Device Management</h1>
-          <p className="text-gray-600 mt-1">Monitor and control all your IoT devices</p>
+          <h1 className="text-xl lg:text-2xl font-bold text-gray-900">مدیریت دستگاه‌ها</h1>
+          <p className="text-gray-600 mt-1">نظارت و کنترل تمام دستگاه‌های IoT شما</p>
         </div>
         <button 
           onClick={() => setShowAddModal(true)}
-          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition-colors"
+          className="w-full lg:w-auto bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center justify-center space-x-2 space-x-reverse transition-colors"
         >
           <Plus className="h-4 w-4" />
-          <span>Add Device</span>
+          <span>افزودن دستگاه</span>
         </button>
       </div>
 
       {/* Search and Filters */}
-      <div className="bg-white rounded-xl shadow-sm border p-6 mb-6">
-        <div className="flex flex-col sm:flex-row gap-4">
+      <div className="bg-white rounded-xl shadow-sm border p-4 lg:p-6 mb-6">
+        <div className="flex flex-col lg:flex-row gap-4">
           <div className="flex-1 relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+            <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
             <input
               type="text"
-              placeholder="Search devices..."
+              placeholder="جستجوی دستگاه‌ها..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+              className="w-full pr-10 pl-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
             />
           </div>
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-3 space-x-reverse">
             <select
               value={filterStatus}
               onChange={(e) => setFilterStatus(e.target.value)}
               className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
             >
-              <option value="all">All Status</option>
-              <option value="online">Online</option>
-              <option value="offline">Offline</option>
-              <option value="warning">Warning</option>
-              <option value="error">Error</option>
+              <option value="all">همه وضعیت‌ها</option>
+              <option value="online">آنلاین</option>
+              <option value="offline">آفلاین</option>
+              <option value="warning">هشدار</option>
+              <option value="error">خطا</option>
             </select>
             <button className="p-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
               <Filter className="h-4 w-4 text-gray-600" />
@@ -186,23 +195,23 @@ export default function DeviceManagement({ user }: DeviceManagementProps) {
       </div>
 
       {/* Devices Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 lg:gap-6">
         {filteredDevices.map((device) => (
-          <div key={device.id} className="bg-white rounded-xl shadow-sm border hover:shadow-md transition-shadow">
-            <div className="p-6">
+          <div key={device.id} className="bg-white rounded-xl shadow-sm border hover:shadow-md transition-shadow card-hover">
+            <div className="p-4 lg:p-6">
               <div className="flex items-start justify-between mb-4">
-                <div className="flex items-center space-x-3">
+                <div className="flex items-center space-x-3 space-x-reverse">
                   <div className="bg-blue-100 p-2 rounded-lg">
                     {getTypeIcon(device.type)}
                   </div>
                   <div>
-                    <h3 className="font-semibold text-gray-900 truncate">{device.name}</h3>
-                    <p className="text-sm text-gray-600">{device.type}</p>
+                    <h3 className="font-semibold text-gray-900 text-sm lg:text-base">{device.name}</h3>
+                    <p className="text-xs lg:text-sm text-gray-600">{device.type}</p>
                   </div>
                 </div>
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center space-x-2 space-x-reverse">
                   <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(device.status)}`}>
-                    {device.status}
+                    {getStatusText(device.status)}
                   </span>
                   <button className="p-1 hover:bg-gray-100 rounded">
                     <MoreVertical className="h-4 w-4 text-gray-400" />
@@ -211,16 +220,16 @@ export default function DeviceManagement({ user }: DeviceManagementProps) {
               </div>
 
               <div className="space-y-3">
-                <div className="flex items-center space-x-2 text-sm text-gray-600">
+                <div className="flex items-center space-x-2 space-x-reverse text-sm text-gray-600">
                   <MapPin className="h-4 w-4" />
                   <span>{device.location}</span>
                 </div>
 
                 {device.temperature && (
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600 flex items-center">
-                      <Thermometer className="h-4 w-4 mr-1" />
-                      Temperature
+                    <span className="text-sm text-gray-600 flex items-center space-x-1 space-x-reverse">
+                      <Thermometer className="h-4 w-4" />
+                      <span>دما</span>
                     </span>
                     <span className="text-sm font-medium">{device.temperature}°C</span>
                   </div>
@@ -228,29 +237,29 @@ export default function DeviceManagement({ user }: DeviceManagementProps) {
 
                 {device.humidity && (
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600 flex items-center">
-                      <Droplets className="h-4 w-4 mr-1" />
-                      Humidity
+                    <span className="text-sm text-gray-600 flex items-center space-x-1 space-x-reverse">
+                      <Droplets className="h-4 w-4" />
+                      <span>رطوبت</span>
                     </span>
                     <span className="text-sm font-medium">{device.humidity}%</span>
                   </div>
                 )}
 
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600 flex items-center">
-                    <Power className="h-4 w-4 mr-1" />
-                    Power Usage
+                  <span className="text-sm text-gray-600 flex items-center space-x-1 space-x-reverse">
+                    <Power className="h-4 w-4" />
+                    <span>مصرف برق</span>
                   </span>
                   <span className="text-sm font-medium">{device.power}W</span>
                 </div>
 
                 {device.batteryLevel !== undefined && (
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600 flex items-center">
-                      <Battery className="h-4 w-4 mr-1" />
-                      Battery
+                    <span className="text-sm text-gray-600 flex items-center space-x-1 space-x-reverse">
+                      <Battery className="h-4 w-4" />
+                      <span>باتری</span>
                     </span>
-                    <div className="flex items-center space-x-2">
+                    <div className="flex items-center space-x-2 space-x-reverse">
                       <div className="w-16 bg-gray-200 rounded-full h-2">
                         <div 
                           className={`h-2 rounded-full ${
@@ -266,11 +275,11 @@ export default function DeviceManagement({ user }: DeviceManagementProps) {
                 )}
 
                 <div className="flex items-center justify-between pt-3 border-t">
-                  <span className="text-xs text-gray-500 flex items-center">
-                    <Clock className="h-3 w-3 mr-1" />
-                    {formatLastUpdate(device.lastUpdate)}
+                  <span className="text-xs text-gray-500 flex items-center space-x-1 space-x-reverse">
+                    <Clock className="h-3 w-3" />
+                    <span>{formatLastUpdate(device.lastUpdate)}</span>
                   </span>
-                  <div className="flex space-x-2">
+                  <div className="flex space-x-2 space-x-reverse">
                     <button className="p-1 hover:bg-gray-100 rounded transition-colors">
                       <Edit className="h-4 w-4 text-gray-600" />
                     </button>
@@ -289,43 +298,43 @@ export default function DeviceManagement({ user }: DeviceManagementProps) {
       {showAddModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-xl max-w-md w-full p-6">
-            <h3 className="text-lg font-semibold mb-4">Add New Device</h3>
+            <h3 className="text-lg font-semibold mb-4">افزودن دستگاه جدید</h3>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Device Name</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">نام دستگاه</label>
                 <input
                   type="text"
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                  placeholder="Enter device name"
+                  placeholder="نام دستگاه را وارد کنید"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Device Type</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">نوع دستگاه</label>
                 <select className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none">
-                  <option>Climate Control</option>
-                  <option>Security</option>
-                  <option>Lighting</option>
-                  <option>Monitoring</option>
+                  <option>کنترل آب و هوا</option>
+                  <option>امنیت</option>
+                  <option>روشنایی</option>
+                  <option>نظارت</option>
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Location</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">مکان</label>
                 <input
                   type="text"
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                  placeholder="Enter location"
+                  placeholder="مکان را وارد کنید"
                 />
               </div>
             </div>
-            <div className="flex justify-end space-x-3 mt-6">
+            <div className="flex justify-end space-x-3 space-x-reverse mt-6">
               <button 
                 onClick={() => setShowAddModal(false)}
                 className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
               >
-                Cancel
+                انصراف
               </button>
               <button className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors">
-                Add Device
+                افزودن دستگاه
               </button>
             </div>
           </div>
